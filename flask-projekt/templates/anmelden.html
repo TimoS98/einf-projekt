@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>registrieren</title>
+          <link rel="stylesheet" href="{{ url_for('static', filename='anmelden.css') }}">
+    </head>
+   
+     <img src="{{ url_for('static', filename='login.png') }}" class="bg" id="background_image">
+        <div>
+            <div id="register_datas">
+                <div id="register_title">Registrieren</div>
+                <form method="POST" >
+                <div id="inputs">
+                <input type="text" placeholder="Name" class="input_field" name="name">
+                <input type="text" placeholder="Nachname" class="input_field" name="nachname">
+                <input type="email" placeholder="E-Mail Adresse" class="input_field" name="email">
+                <input type="password" placeholder="Passwort" class="input_field" name="passwort">
+                </div>
+                <button id="register" type="submit">registrieren</button>
+                
+            </div>
+        </div>
+    </body>
+</html>

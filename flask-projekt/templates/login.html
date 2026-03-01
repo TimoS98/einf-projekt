@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+
+<body>
+    <img src="{{ url_for('static', filename='login.png') }}" class="bg" id="background_image">
+    
+    <div id="backgroundbox">
+        <div id="login_text"> LOGIN </div>
+        <div id="input_fields">
+              <form method="POST">
+            <input type="text" id="name" name = "username" placeholder="Benutzername" >
+            <input type="password" id="passwort" name="password" placeholder="Passwort" ><br>
+          
+                <button type="submit">Anmelden</button>
+            </form>
+           <div class="error-container">
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</div>
+            <br><br>
+         <p>
+            Haben Sie noch kein Konto bei uns? Hier haben Sie die Möglichkeit über den Link sich zu <a href="/anmelden">registrieren</a>. 
+         </p>
+            
+           
+        </div>
+       
+    </div>
+    </div>
+</body>
+
+</html>

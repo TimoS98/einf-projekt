@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='list.css') }}">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <div id="navbar">
+        <img src="{{ url_for('static', filename='shopping_cart.png') }}" id="shoping_cart" />
+        <div id="dashboard" class="hover_buttons">Dashboard</div>
+        <div id="done" class="hover_buttons">Erledigte Listen</div>
+        <div id="toDos" class="hover_buttons">Noch zu bearbeitende Listen</div>
+    </div>
+    <div id="add_one">+</div>
+
+
+    </div>
+    </div>
+    <script>
+        var input_fields = [];
+        var background_div;
+        var select_box;
+        var select_set;
+        var close_b;
+        var create_field;
+        var creator;
+        let counter = 0;
+        var backward;
+
+        document.getElementById("add_one").addEventListener("click", add);
+
+        function add() {
+            background_div = document.createElement("div");
+            background_div.classList.add("background_add");
+            document.body.appendChild(background_div);
+            select_box = document.createElement("div");
+            select_box.classList.add("select_box");
+            background_div.appendChild(select_box);
+            close_b = document.createElement("div");
+            close_b.classList.add("close_b");
+            close_b.textContent = "✕";
+            select_box.appendChild(close_b);
+            close_b.addEventListener("click", close_all);
+            select_set = document.createElement("div");
+            select_set.classList.add("select_set");
+            select_box.appendChild(select_set);
+
+
+            const choice_one = document.createElement("div");
+            choice_one.classList.add("choice");
+            choice_one.textContent = "Liste mit ListenID hinzufügen"
+            select_set.appendChild(choice_one);
+
+            const choice_two = document.createElement("div");
+            choice_two.classList.add("choice");
+            choice_two.textContent = "Liste neu erstellen";
+            select_set.appendChild(choice_two);
+
+            choice_one.addEventListener("click", listID);
+
+            choice_two.addEventListener("click", function () {
+                newList();
+            });
+        }
+
+        function listID() {
+            select_set.innerHTML = "";
+            const list_id = document.createElement("input");
+            list_id.classList.add("list_id");
+            select_set.appendChild(list_id);
+            list_id.placeholder = "ListenID";
+            submit_b = document.createElement("div");
+            submit_b.classList.add("button_sub");
+            select_set.appendChild(submit_b);
+            submit_b.innerHTML = "bestätigen"
+            const back = document.createElement("div");
+            back.classList.add("back_arrow");
+            select_set.appendChild(back);
+            back.innerHTML = "←"
+            back.addEventListener("click", goback);
+
+        }
+
+        function goback() {
+            select_set.innerHTML = "";
+            background_div.remove();
+            add();
+        }
+        function newList() {
+            select_set.innerHTML = "";
+            const new_elem = document.createElement("div");
+            new_elem.dataset.id = input_fields.length;
+
+            new_elem.classList.add("new_elem");
+            new_elem.addEventListener("click", add_next);
+            new_elem.dataset.id = counter;
+            select_set.appendChild(new_elem);
+            const innercycle = document.createElement("div");
+            innercycle.classList.add("inner_cycle");
+            innercycle.textContent = "+";
+            new_elem.appendChild(innercycle);
+
+            backward = document.createElement("div");
+            backward.classList.add("home");
+            backward.addEventListener("click", home);
+            select_box.appendChild(backward);
+            backward.textContent = "←"
+
+            const forward = document.createElement("div");
+            forward.classList.add("forward");
+            forward.addEventListener("click", insertListname);
+            select_box.appendChild(forward);
+            forward.textContent = "✓";
+
+
+
+
+
+
+
+        }
+        function close_all() {
+            if (background_div) {
+                background_div.remove();
+                background_div = null;
+                select_box = null;
+                select_set = null;
+            }
+        }
+        function add_next() {
+            create_field = document.createElement("div");
+            create_field.classList.add("create_field");
+            select_box.appendChild(create_field);
+            creator = document.createElement("div");
+
+            creator.classList.add("creator");
+            create_field.appendChild(creator);
+            const close_creator = document.createElement("div");
+            close_creator.classList.add("close_cr");
+            close_creator.textContent = "✕";
+            creator.appendChild(close_creator);
+            close_creator.addEventListener("click", cl_creator);
+            const name = document.createElement("input");
+            name.placeholder = "Was möchten Sie erledigen?";
+            name.classList.add("titel");
+            creator.appendChild(name);
+            const tick = document.createElement("div")
+            tick.textContent = "✓";
+            tick.classList.add("tick");
+            creator.appendChild(tick);
+
+            const select = document.createElement("select");
+            select.classList.add("priority_select");
+
+            const default_select = document.createElement("option");
+            default_select.value = "default_select";
+            default_select.textContent = "Welche Priorität?";
+
+
+            const option1 = document.createElement("option");
+            option1.value = "low";
+            option1.textContent = "Niedrig";
+
+            const option2 = document.createElement("option");
+            option2.value = "medium";
+            option2.textContent = "Mittel";
+
+            const option3 = document.createElement("option");
+            option3.value = "high";
+            option3.textContent = "Hoch";
+
+            select.appendChild(default_select);
+            select.appendChild(option1);
+            select.appendChild(option2);
+            select.appendChild(option3);
+
+            select_set.appendChild(select);
+            creator.appendChild(select)
+            tick.addEventListener("click", function () {
+                finish(name.value, select.value);
+            });
+
+        }
+
+        function cl_creator() {
+            create_field.remove();
+        }
+
+        function finish(value_ToDo, value_select) {
+            const todo = {
+                id: counter,
+                title: value_ToDo,
+                priority: value_select
+            };
+            const trash = document.createElement("div");
+            trash.classList.add("trash")
+            trash.textContent = "❌"
+            trash.dataset.id = counter;
+            trash.addEventListener("click", discard);
+
+
+            creator.remove();
+            create_field.remove();
+            const edit = document.createElement("div");
+            edit.classList.add("bearbeiten")
+            edit.textContent = "🔨"
+            edit.dataset.id = counter;
+            edit.addEventListener("click", edit_f)
+
+
+
+
+            input_fields.push(todo);
+            const element = document.querySelector(`[data-id="${counter}"]`);
+            element.innerHTML = "";
+            element.classList.remove("new_elem");
+            element.classList.add("finish_obj");
+            element.appendChild(trash);
+            element.appendChild(edit)
+            element.removeEventListener("click", add_next);
+
+            const box_entry = document.createElement("div");
+            const box_priority = document.createElement("div");
+            box_entry.textContent = "Aufgabe: " + todo.title;
+            box_priority.textContent = "Priorität: " + todo.priority;
+            box_entry.classList.add("boxentry")
+            box_priority.classList.add("priority_box")
+            element.appendChild(box_entry);
+            element.appendChild(box_priority)
+            counter++;
+
+
+
+            element.classList.add("finish_obj");
+            const new_elem = document.createElement("div");
+            new_elem.classList.add("new_elem");
+            new_elem.addEventListener("click", add_next);
+            new_elem.dataset.id = counter;
+
+            select_set.appendChild(new_elem);
+            const innercycle = document.createElement("div");
+            innercycle.classList.add("inner_cycle");
+            innercycle.textContent = "+";
+            new_elem.appendChild(innercycle);
+            console.log(input_fields);
+        }
+
+        function discard() {
+            id = this.dataset.id;
+            const element = document.querySelector(`[data-id="${id}"]`);
+            element.remove();
+            for (let i = 0; i < input_fields.length; i++) {
+                if (input_fields[i].id == id) {
+                    input_fields.splice(i, 1);
+                    break;
+                }
+            }
+            console.log(input_fields)
+
+
+        }
+        function edit_f() {
+            id = this.dataset.id;
+            console.log(id)
+            let priority;
+            let titel;
+            for (let i = 0; i < input_fields.length; i++) {
+                if (input_fields[i].id == id) {
+                    priority = input_fields[i].priority;
+                    titel = input_fields[i].title;
+                }
+            }
+
+            create_field = document.createElement("div");
+            create_field.classList.add("create_field");
+            select_box.appendChild(create_field);
+            creator = document.createElement("div");
+
+            creator.classList.add("creator");
+            create_field.appendChild(creator);
+            const close_creator = document.createElement("div");
+            close_creator.classList.add("close_cr");
+            close_creator.textContent = "✕";
+            creator.appendChild(close_creator);
+            close_creator.addEventListener("click", cl_creator);
+            const name = document.createElement("input");
+            name.placeholder = "Was möchten Sie erledigen?";
+            name.classList.add("titel");
+            creator.appendChild(name);
+            const tick = document.createElement("div")
+            tick.textContent = "✓";
+            tick.classList.add("tick");
+            creator.appendChild(tick);
+
+            const select = document.createElement("select");
+            select.classList.add("priority_select");
+
+            const default_select = document.createElement("option");
+            default_select.value = "default_select";
+            default_select.textContent = "Welche Priorität?";
+
+
+            const option1 = document.createElement("option");
+            option1.value = "low";
+            option1.textContent = "Niedrig";
+
+            const option2 = document.createElement("option");
+            option2.value = "medium";
+            option2.textContent = "Mittel";
+
+            const option3 = document.createElement("option");
+            option3.value = "high";
+            option3.textContent = "Hoch";
+
+            select.appendChild(default_select);
+            select.appendChild(option1);
+            select.appendChild(option2);
+            select.appendChild(option3);
+
+            select_set.appendChild(select);
+            creator.appendChild(select);
+
+            name.value = titel;
+            select.value = priority;
+
+            tick.addEventListener("click", function () {
+                change(id, name.value, select.value);
+            });
+        }
+
+        function change(id, input_value, select_value) {
+            for (let i = 0; i < input_fields.length; i++) {
+                if (input_fields[i].id == id) {
+                    input_fields[i].priority = select_value;
+                    input_fields[i].title = input_value;
+                    break;
+                }
+            }
+            console.log(input_fields)
+
+            const trash = document.createElement("div");
+            trash.classList.add("trash")
+            trash.textContent = "❌"
+            trash.dataset.id = id;
+            trash.addEventListener("click", discard);
+
+            const edit = document.createElement("div");
+            edit.classList.add("bearbeiten")
+            edit.textContent = "🔨"
+            edit.dataset.id = id;
+            edit.addEventListener("click", edit_f)
+
+            create_field.remove();
+            const element = document.querySelector(`[data-id="${id}"]`);
+            element.innerHTML = "";
+            const box_entry = document.createElement("div");
+            const box_priority = document.createElement("div");
+
+
+
+            box_entry.textContent = "Aufgabe: " + input_value;
+            box_priority.textContent = "Priorität: " + select_value;
+            box_entry.classList.add("boxentry")
+            box_priority.classList.add("priority_box")
+            element.appendChild(box_entry);
+            element.appendChild(box_priority)
+            element.appendChild(trash);
+            element.appendChild(edit);
+
+
+
+
+        }
+        function home() {
+            input_fields = [];
+            background_div.remove();
+            background_div = null;
+            select_box = null;
+            select_set = null;
+            add();
+
+        }
+
+        function insertListname() {
+            create_field = document.createElement("div");
+            create_field.classList.add("create_field");
+            select_box.appendChild(create_field);
+            creator = document.createElement("div");
+            creator.classList.remove("creator");
+            creator.classList.add("creator_listname");
+            create_field.appendChild(creator);
+            const close_creator = document.createElement("div");
+            close_creator.classList.add("close_cr");
+            close_creator.textContent = "✕";
+            creator.appendChild(close_creator);
+            close_creator.addEventListener("click", cl_creator);
+            const name = document.createElement("input");
+            name.placeholder = "Titel der Liste";
+            name.classList.add("list_name");
+            creator.appendChild(name);
+            const tick = document.createElement("div")
+            tick.textContent = "✓";
+            tick.classList.add("tick");
+            creator.appendChild(tick);
+            tick.addEventListener("click",function(){
+                    if(name.value != ""){
+                        background_div.remove();
+                        saveList(name.value);
+                    }else{
+                        empty = document.createElement("div");
+                        empty.classList.add("empty")
+                        creator.appendChild(empty);
+                        empty.textContent="Bitte geben Sie einen Titel ein";
+                    }
+            });
+        }
+
+        function saveList(listname){
+        console.log(listname)
+        const payload = {
+        listname: listname,
+        todos: input_fields
+    };
+            fetch("/save_list",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(payload)
+            }).then(response => response.json())
+              .then(data => {
+                input_fields = [];
+                const list_elem = document.createElement("div");
+                list_elem.classList.add("list_elem");
+                list_elem.dataset.id= "";
+                body.appendChild(list_elem);
+              })
+              .catch(error =>{
+                console.error("Fehler",error);
+              })
+            }
+
+
+    </script>
+</body>
+
+</html>
