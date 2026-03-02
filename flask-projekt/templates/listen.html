@@ -33,9 +33,9 @@
 
         document.getElementById("add_one").addEventListener("click", add);
 
-        window.addEventListener("resize", function() {
-    repositionLists();
-});
+        window.addEventListener("resize", function () {
+            repositionLists();
+        });
 
         function add() {
             background_div = document.createElement("div");
@@ -444,8 +444,20 @@
                     list_elem = document.createElement("div");
                     list_elem.classList.add("list_elem");
                     list_elem.dataset.id = data["listID"];
-                    
+                    list_elem.addEventListener("click", openlist);
                     document.body.appendChild(list_elem);
+                    const informations_box = document.createElement("div");
+                    informations_box.classList.add("information_box");
+                    list_elem.appendChild(informations_box);
+                    const information = document.createElement("div");
+                    information.classList.add("information");
+                    informations_box.appendChild(information);
+                    information.textContent = "#"+ data["listID"];
+                    const listenname = document.createElement("div");
+                    listenname.classList.add("listen_name");
+                    informations_box.appendChild(listenname);
+                    listenname.textContent= data["listenname"];
+
                     repositionLists();
                 })
                 .catch(error => {
@@ -456,15 +468,35 @@
         function repositionLists() {
 
             let elements = document.querySelectorAll(".list_elem");
-            let space_per_row = Math.floor(1/0.12);
-            elements.forEach((element, index) => { 
+            let space_per_row = Math.floor(1 / 0.12);
+            elements.forEach((element, index) => {
                 let col = index % space_per_row;
-                let row = Math.floor(index/space_per_row);
+                let row = Math.floor(index / space_per_row);
 
                 element.style.left = (2 + col * 12) + "%";
-                element.style.top  = (15 + row * 27) + "vh";
+                element.style.top = (15 + row * 27) + "vh";
             });
         }
+
+        function openlist() {
+            fetch("/open_list", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({listenid:this.dataset.id})
+            }).then(response => {
+                return response.json();
+            })
+                .then(data => {
+                    
+                    window.location.href = "/open_list_page";
+                })
+                .catch(error => {
+                    console.error("Fehler", error);
+                })
+        }
+        
 
 
     </script>

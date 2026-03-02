@@ -42,7 +42,7 @@ def saveList():
 
  
 
- return jsonify({"listID":last_list_insert})
+ return jsonify({"listID":last_list_insert, "listenname":list_name})
 
 def init_db():
     conn = sqlite3.connect("todo.db")
@@ -139,22 +139,35 @@ def register():
         return redirect(url_for("home"))
     
     return render_template("anmelden.html")
-    
-    
 
-@app.route("/users")
-def show_users():
-    import sqlite3
-    conn = sqlite3.connect("users.db")
-    conn.row_factory = sqlite3.Row 
-    cursor = conn.cursor()
+@app.route("/open_list",methods=["POST","GET"])
+def open_list():
+   data = request.get_json()
+   session["list_id"] = data["listenid"]  
+   return jsonify({"status":"ok"}) 
+
+
+
+@app.route("/open_list_page",methods=["POST","GET"])
+def open_list_page():
    
-    cursor.execute("SELECT * FROM users")
-    users = cursor.fetchall()
+   print("I'm Here :)")
+   listen_id = session["list_id"]
+   conn = sqlite3.connect("todo.db")
+   conn.row_factory = sqlite3.Row
+   cursor = conn.cursor()
+   
+   cursor.execute("""
+         SELECT Name, Prioritaet From todo WHERE ListenID = ?       
+    """,(listen_id,))
+   
+   todos = cursor.fetchall()
 
-    conn.close()
-    print(str([dict(user) for user in users]))
-    return  str([dict(user) for user in users])
+   conn.close()
+   
+  
+   return  render_template("listen_einsicht.html", todos=todos)
+
 
 init_db()  
 if __name__ == "__main__":

@@ -1,0 +1,52 @@
+body,html{
+    height: 100%;
+    width: 100%;
+    margin:0;
+    display: flex;
+    justify-content: center;
+
+}
+#navbar{
+    background-color: rgba(28, 195, 181, 0.4);
+    height: 15vh;
+    width: 100%;
+    
+}
+#anordnung_eintraege{
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    gap: 2%;
+    margin-top: 16vh;
+    
+}
+.entries{
+    height: 10vh;
+    width: 100%;
+    font-size:xx-large;
+    border-radius: 8px;
+    border: 3px solid lightgrey;
+    display: flex;
+    
+
+}
+.entries:hover{
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   cursor:pointer;
+}
+
+.name_todo{
+display: flex;
+align-items: center;
+justify-content: center;
+width: 50%;
+border-right: 1px solid black;
+}
+
+.prio_todo{
+display: flex;
+align-items: center;
+justify-content: center;
+width: 50%;
+
+}

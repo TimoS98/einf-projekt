@@ -237,11 +237,13 @@ html {
     align-items: center;
     font-size: 150%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    -webkit-user-select: none;
 }
 
 .button_sub:hover {
     background-color: lightgray;
     cursor: pointer;
+    user-select: none;
 }
 
 .back_arrow {
@@ -550,5 +552,40 @@ html {
         0 16px 32px rgba(0, 0, 0, 0.12),
         0 32px 64px rgba(0, 0, 0, 0.15);
     cursor: pointer;
+}
+.information_box{
+    height: 7vh;;
+    width: 100%;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: lightgray;
+    margin-top: 18vh; 
+    justify-content: center;
+    align-items: center;
+    font-size: 170%;
+    overflow: hidden;
+   
+
+}
+
+.listen_name{
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    overflow-wrap:break-word;
+    
+    
+   
+    
+    width: 100%;
+    
+}
+.information{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+ 
+     width: 100%;
+
 }
 

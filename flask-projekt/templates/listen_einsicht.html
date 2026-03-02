@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ansicht.css') }}">
+    <title>Ansicht</title>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="anordnung_eintraege">
+{% for todo in todos %}
+    <div class="entries">
+       <div class="name_todo">{{ todo["Name"] }}</div>
+        <div class="prio_todo">{{ todo["Prioritaet"] }}</div>
+    </div>
+{% endfor %}
+</div>
+
+
+</body>
+</html>
