@@ -13,6 +13,7 @@
         <div id="done" class="hover_buttons">Erledigte Listen</div>
         <div id="toDos" class="hover_buttons">Noch zu bearbeitende Listen</div>
     </div>
+
     <div id="add_one">+</div>
 
 
@@ -28,8 +29,13 @@
         var creator;
         let counter = 0;
         var backward;
+        var list_elem;
 
         document.getElementById("add_one").addEventListener("click", add);
+
+        window.addEventListener("resize", function() {
+    repositionLists();
+});
 
         function add() {
             background_div = document.createElement("div");
@@ -404,43 +410,61 @@
             tick.textContent = "✓";
             tick.classList.add("tick");
             creator.appendChild(tick);
-            tick.addEventListener("click",function(){
-                    if(name.value != ""){
-                        background_div.remove();
-                        saveList(name.value);
-                    }else{
-                        empty = document.createElement("div");
-                        empty.classList.add("empty")
-                        creator.appendChild(empty);
-                        empty.textContent="Bitte geben Sie einen Titel ein";
-                    }
+            tick.addEventListener("click", function () {
+                if (name.value != "") {
+                    background_div.remove();
+                    saveList(name.value);
+                } else {
+                    empty = document.createElement("div");
+                    empty.classList.add("empty")
+                    creator.appendChild(empty);
+                    empty.textContent = "Bitte geben Sie einen Titel ein";
+                }
             });
         }
 
-        function saveList(listname){
-        console.log(listname)
-        const payload = {
-        listname: listname,
-        todos: input_fields
-    };
-            fetch("/save_list",{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
+        function saveList(listname) {
+            console.log(listname)
+            const payload = {
+                listname: listname,
+                todos: input_fields
+            };
+            fetch("/save_list", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
-            }).then(response => response.json())
-              .then(data => {
-                input_fields = [];
-                const list_elem = document.createElement("div");
-                list_elem.classList.add("list_elem");
-                list_elem.dataset.id= "";
-                body.appendChild(list_elem);
-              })
-              .catch(error =>{
-                console.error("Fehler",error);
-              })
-            }
+            }).then(response => {
+                return response.json();
+            })
+                .then(data => {
+                    input_fields = [];
+                    let list_count = document.querySelectorAll(".list_elem").length;
+                    list_elem = document.createElement("div");
+                    list_elem.classList.add("list_elem");
+                    list_elem.dataset.id = data["listID"];
+                    
+                    document.body.appendChild(list_elem);
+                    repositionLists();
+                })
+                .catch(error => {
+                    console.error("Fehler", error);
+                })
+        }
+
+        function repositionLists() {
+
+            let elements = document.querySelectorAll(".list_elem");
+            let space_per_row = Math.floor(1/0.12);
+            elements.forEach((element, index) => { 
+                let col = index % space_per_row;
+                let row = Math.floor(index/space_per_row);
+
+                element.style.left = (2 + col * 12) + "%";
+                element.style.top  = (15 + row * 27) + "vh";
+            });
+        }
 
 
     </script>

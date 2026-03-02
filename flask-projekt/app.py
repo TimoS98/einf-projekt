@@ -42,7 +42,7 @@ def saveList():
 
  
 
- return jsonify({"status":"ok"})
+ return jsonify({"listID":last_list_insert})
 
 def init_db():
     conn = sqlite3.connect("todo.db")

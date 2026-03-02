@@ -3,6 +3,7 @@ html {
     margin: 0;
     height: 100%;
     user-select: none;
+    position: relative;
 }
 
 #navbar {
@@ -110,6 +111,7 @@ html {
     font-size: 180%;
     margin-left: 95vw;
     position: fixed;
+    z-index: 9999;
 
 }
 
@@ -530,3 +532,23 @@ html {
     position: absolute;
     
 }
+
+.list_elem{
+    position: absolute;
+    top: 15vh;
+    
+    height: 25vh;
+    width: 10%; 
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.list_elem:hover{
+        box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.08),
+        0 8px 16px rgba(0, 0, 0, 0.08),
+        0 16px 32px rgba(0, 0, 0, 0.12),
+        0 32px 64px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
