@@ -5,7 +5,9 @@
     <title>Ansicht</title>
 </head>
 <body>
-    <div id="navbar"></div>
+    <div id="navbar">
+        <div id="back">⬅</div>
+    </div>
     <div id="anordnung_eintraege">
         <div class= "entries">
             <div class="name_kategorie">Name</div>
@@ -19,6 +21,19 @@
 {% endfor %}
 </div>
 
+<script>
+    document.getElementById("back").addEventListener("click",()=>{
+        fetch("/listen.html",{
+            method: "GET",
+    }).then(response =>{
 
+    }).then(data =>{
+        window.location.href = "/backward";
+    }).catch(error =>{
+
+    })
+    });
+
+</script>
 </body>
 </html>

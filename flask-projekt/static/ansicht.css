@@ -12,6 +12,11 @@ body,html{
     background-color: rgba(28, 195, 181, 0.4);
     height: 15vh;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding-left: 5%;
+
     
     
 }
@@ -72,5 +77,24 @@ justify-content: center;
 width: 50%;
 font-weight: bold;
 text-decoration: underline;
+
+}
+
+#back{
+    justify-content: center;
+    align-items: center;
+    font-size: 400%;
+    height: 7vh;
+    width: 7vh;
+    border-radius: 999px;
+    
+    display: flex;
+   
+}
+
+#back:hover{
+
+cursor: pointer;
+box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 
 }

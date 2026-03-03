@@ -16,13 +16,26 @@ html {
 
     display: flex;
     align-items: center;
-    gap: 20px;
     padding-left: 20px;
+    padding-right: 20px;
     user-select: none;
     background-color: rgba(28, 195, 181, 0.4);
 
+   
 
 
+
+}
+
+#logout{
+ font-size: 400%;
+ 
+ margin-left: 88%;
+}
+
+#logout:hover{
+ color: red;
+ cursor: pointer;
 }
 
 #done {
@@ -587,5 +600,9 @@ html {
  
      width: 100%;
 
+}
+
+#warning{
+    color: red;
 }
 

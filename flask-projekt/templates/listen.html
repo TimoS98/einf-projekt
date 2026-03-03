@@ -9,9 +9,7 @@
 <body>
     <div id="navbar">
         <img src="{{ url_for('static', filename='shopping_cart.png') }}" id="shoping_cart" />
-        <div id="dashboard" class="hover_buttons">Dashboard</div>
-        <div id="done" class="hover_buttons">Erledigte Listen</div>
-        <div id="toDos" class="hover_buttons">Noch zu bearbeitende Listen</div>
+        <div id="logout">⏻</div>
     </div>
 
     <div id="add_one">+</div>
@@ -81,6 +79,17 @@
             submit_b.classList.add("button_sub");
             select_set.appendChild(submit_b);
             submit_b.innerHTML = "bestätigen"
+            submit_b.addEventListener("click",()=>{
+                if(list_id.value != ""){
+                add_liste_with_id(list_id.value)
+                }
+                else{
+                    const warning = document.createElement("div");
+                    warning.innerHTML="Bitte geben Sie eine ListenId an";
+                    warning.classList.add("warning");
+                    select_set.appendChild(warning);
+                }
+            });
             const back = document.createElement("div");
             back.classList.add("back_arrow");
             select_set.appendChild(back);
@@ -424,7 +433,7 @@
         }
 
         function saveList(listname) {
-            console.log(listname)
+            
             const payload = {
                 listname: listname,
                 todos: input_fields
@@ -440,7 +449,7 @@
             })
                 .then(data => {
                     input_fields = [];
-                    let list_count = document.querySelectorAll(".list_elem").length;
+                    
                     list_elem = document.createElement("div");
                     list_elem.classList.add("list_elem");
                     list_elem.dataset.id = data["listID"];
@@ -452,11 +461,11 @@
                     const information = document.createElement("div");
                     information.classList.add("information");
                     informations_box.appendChild(information);
-                    information.textContent = "#"+ data["listID"];
+                    information.textContent = "#" + data["listID"];
                     const listenname = document.createElement("div");
                     listenname.classList.add("listen_name");
                     informations_box.appendChild(listenname);
-                    listenname.textContent= data["listenname"];
+                    listenname.textContent = data["listenname"];
 
                     repositionLists();
                 })
@@ -484,19 +493,126 @@
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({listenid:this.dataset.id})
+                body: JSON.stringify({ listenid: this.dataset.id })
             }).then(response => {
                 return response.json();
             })
                 .then(data => {
-                    
+                    history.pushState({offeneliste: "Super"}, "", "/dashboard");
                     window.location.href = "/open_list_page";
                 })
                 .catch(error => {
                     console.error("Fehler", error);
                 })
         }
-        
+        document.addEventListener("DOMContentLoaded", function () {
+            listenladen();
+        });
+
+
+        function listenladen() {
+            fetch("/listen.html", {
+                method: "GET",
+
+            }).then(response => {
+                return response.json();
+            })
+                .then(data => {
+                    
+                    for (let i = 0; i < data.length; i++) {
+                        list_elem = document.createElement("div");
+                        list_elem.classList.add("list_elem");
+                        list_elem.dataset.id = data[i]["ListenID"];
+                        list_elem.addEventListener("click", openlist);
+                        document.body.appendChild(list_elem);
+                        const informations_box = document.createElement("div");
+                        informations_box.classList.add("information_box");
+                        list_elem.appendChild(informations_box);
+                        const information = document.createElement("div");
+                        information.classList.add("information");
+                        informations_box.appendChild(information);
+                        information.textContent = "#" + data[i]["ListenID"];
+                        const listenname = document.createElement("div");
+                        listenname.classList.add("listen_name");
+                        informations_box.appendChild(listenname);
+                        listenname.textContent = data[i]["Listenname"];
+
+                        repositionLists();
+                    }
+                })
+                .catch(error => {
+                    console.error("Fehler", error);
+                })
+        }
+
+        document.getElementById("logout").addEventListener("click",()=>{
+            fetch("/logout",{
+                method: "GET",
+            }).then(response =>{
+                history.pushState({offeneliste: "Super"}, "", "/dashboard");
+                return; 
+            }).then(data =>{
+                    window.location.href = "/";
+            }).catch(error => {
+                    console.error("Fehler", error);
+                })
+        });
+
+        function add_liste_with_id(listenid){
+            
+            fetch("/add_list_with_id",{
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ listenid: listenid})
+            }).then(response => {
+                return response.json();
+            })
+                .then(data => {
+                    background_div.remove();
+                    load_list(data[0]["ListenID"]);
+                    
+                    
+                    
+                })
+                .catch(error => {
+                    console.error("Fehler", error);
+                })
+        }
+
+        function load_list(listenid){
+            fetch("/load_list",{
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ listenid: listenid})
+            }).then(response =>{
+                return response.json();
+            }).then(data =>{
+                    var listID = data[0]["ListenID"];
+                    var listen_name = data[0]["Listenname"];
+                    list_elem = document.createElement("div");
+                    list_elem.classList.add("list_elem");
+                    list_elem.dataset.id = listID
+                    list_elem.addEventListener("click", openlist);
+                    document.body.appendChild(list_elem);
+                    const informations_box = document.createElement("div");
+                    informations_box.classList.add("information_box");
+                    list_elem.appendChild(informations_box);
+                    const information = document.createElement("div");
+                    information.classList.add("information");
+                    informations_box.appendChild(information);
+                    information.textContent = "#" + listID;
+                    const listenname = document.createElement("div");
+                    listenname.classList.add("listen_name");
+                    informations_box.appendChild(listenname);
+                    listenname.textContent = listen_name;
+                    repositionLists();
+            })
+        }
+
 
 
     </script>
