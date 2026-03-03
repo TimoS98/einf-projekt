@@ -7,9 +7,13 @@
 <body>
     <div id="navbar"></div>
     <div id="anordnung_eintraege">
+        <div class= "entries">
+            <div class="name_kategorie">Name</div>
+            <div class="prio_kategorie">Priorität</div>
+        </div>
 {% for todo in todos %}
     <div class="entries">
-       <div class="name_todo">{{ todo["Name"] }}</div>
+        <div class="name_todo">{{ todo["Name"] }}</div>
         <div class="prio_todo">{{ todo["Prioritaet"] }}</div>
     </div>
 {% endfor %}
