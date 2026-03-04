@@ -558,6 +558,7 @@ html {
     width: 10%;
     border: 1px solid black;
     border-radius: 5px;
+    
 }
 
 .list_elem:hover {
@@ -571,7 +572,6 @@ html {
 
 .information_box {
     height: 7vh;
-    ;
     width: 100%;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -682,4 +682,33 @@ html {
 .submit:hover{
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.error{
+    color: red;
+    font-size: 170%;
+    margin-top: 2%;
+    margin-left: 2%;
+
+}
+
+.delete_list{
+    font-size: 150%;
+    position:absolute; 
+    top: 1%;
+    right: 4%;
+    top: 4%;
+    border-radius: 999px;
+    height: 3vh;
+    width: 3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.delete_list:hover{
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   background-color: rgba(120, 119, 119, 0.35)
+   
 }

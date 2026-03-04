@@ -12,7 +12,7 @@
         <div id="logout">⏻</div>
     </div>
     <div id="add_person_to_list">
-        <img src="{{ url_for('static', filename='user.png') }}" id = "add_user"/>
+        <img src="{{ url_for('static', filename='user.png') }}" id="add_user" />
     </div>
     <div id="add_one">+</div>
 
@@ -84,13 +84,13 @@
             submit_b.classList.add("button_sub");
             select_set.appendChild(submit_b);
             submit_b.innerHTML = "bestätigen"
-            submit_b.addEventListener("click",()=>{
-                if(list_id.value != ""){
-                add_liste_with_id(list_id.value)
+            submit_b.addEventListener("click", () => {
+                if (list_id.value != "") {
+                    add_liste_with_id(list_id.value)
                 }
-                else{
+                else {
                     const warning = document.createElement("div");
-                    warning.innerHTML="Bitte geben Sie eine ListenId an";
+                    warning.innerHTML = "Bitte geben Sie eine ListenId an";
                     warning.classList.add("warning");
                     select_set.appendChild(warning);
                 }
@@ -114,7 +114,9 @@
             new_elem.dataset.id = input_fields.length;
 
             new_elem.classList.add("new_elem");
-            new_elem.addEventListener("click", add_next);
+            new_elem.addEventListener("click", () => {
+                add_next()
+            });
             new_elem.dataset.id = counter;
             select_set.appendChild(new_elem);
             const innercycle = document.createElement("div");
@@ -124,7 +126,9 @@
 
             backward = document.createElement("div");
             backward.classList.add("home");
-            backward.addEventListener("click", home);
+            backward.addEventListener("click", () => {
+                home()
+            });
             select_box.appendChild(backward);
             backward.textContent = "←"
 
@@ -150,6 +154,7 @@
             }
         }
         function add_next() {
+
             create_field = document.createElement("div");
             create_field.classList.add("create_field");
             select_box.appendChild(create_field);
@@ -207,7 +212,7 @@
         function cl_creator() {
             create_field.remove();
         }
-
+        // schließt das Element erstellen Menü und fügt ein neues Element zur erstellenden Liste hinzu 
         function finish(value_ToDo, value_select) {
             const todo = {
                 id: counter,
@@ -222,6 +227,7 @@
 
 
             creator.remove();
+
             create_field.remove();
             const edit = document.createElement("div");
             edit.classList.add("bearbeiten")
@@ -233,7 +239,7 @@
 
 
             input_fields.push(todo);
-            const element = document.querySelector(`[data-id="${counter}"]`);
+            const element = select_set.querySelector(`[data-id="${counter}"]`);
             element.innerHTML = "";
             element.classList.remove("new_elem");
             element.classList.add("finish_obj");
@@ -264,52 +270,73 @@
             innercycle.classList.add("inner_cycle");
             innercycle.textContent = "+";
             new_elem.appendChild(innercycle);
-            console.log(input_fields);
-        }
 
-        function discard() {
-            id = this.dataset.id;
-            const element = document.querySelector(`[data-id="${id}"]`);
-            element.remove();
+        }
+        // Klickevent: Abfeuern des Events element aus erstellender Liste löschen
+        function discard(e) {
+            e.stopPropagation();
+            const element = this.closest("[data-id]");
+
+            const id = element.dataset.id;
+            const parent = element.parentElement;
+
+            parent.remove();
+
             for (let i = 0; i < input_fields.length; i++) {
                 if (input_fields[i].id == id) {
                     input_fields.splice(i, 1);
                     break;
                 }
             }
-            console.log(input_fields)
+
+
 
 
         }
-        function edit_f() {
-            id = this.dataset.id;
-            console.log(id)
+        // Klickevent: Abfeuern des Events element aus erstellender Liste bearbeiten
+
+        function edit_f(e) {
+
+            e.stopPropagation();
+            const button = e.currentTarget;
+            const parent = button.parentElement;
+
+            const id = parent.dataset.id;
+
+
+
             let priority;
             let titel;
+
             for (let i = 0; i < input_fields.length; i++) {
                 if (input_fields[i].id == id) {
                     priority = input_fields[i].priority;
                     titel = input_fields[i].title;
+                    break;
                 }
             }
 
             create_field = document.createElement("div");
             create_field.classList.add("create_field");
             select_box.appendChild(create_field);
-            creator = document.createElement("div");
 
+            creator = document.createElement("div");
             creator.classList.add("creator");
             create_field.appendChild(creator);
+
             const close_creator = document.createElement("div");
             close_creator.classList.add("close_cr");
             close_creator.textContent = "✕";
             creator.appendChild(close_creator);
             close_creator.addEventListener("click", cl_creator);
+
             const name = document.createElement("input");
             name.placeholder = "Was möchten Sie erledigen?";
             name.classList.add("titel");
+            name.value = titel;
             creator.appendChild(name);
-            const tick = document.createElement("div")
+
+            const tick = document.createElement("div");
             tick.textContent = "✓";
             tick.classList.add("tick");
             creator.appendChild(tick);
@@ -317,40 +344,24 @@
             const select = document.createElement("select");
             select.classList.add("priority_select");
 
-            const default_select = document.createElement("option");
-            default_select.value = "default_select";
-            default_select.textContent = "Welche Priorität?";
+            const option1 = new Option("Niedrig", "low");
+            const option2 = new Option("Mittel", "medium");
+            const option3 = new Option("Hoch", "high");
 
-
-            const option1 = document.createElement("option");
-            option1.value = "low";
-            option1.textContent = "Niedrig";
-
-            const option2 = document.createElement("option");
-            option2.value = "medium";
-            option2.textContent = "Mittel";
-
-            const option3 = document.createElement("option");
-            option3.value = "high";
-            option3.textContent = "Hoch";
-
-            select.appendChild(default_select);
-            select.appendChild(option1);
-            select.appendChild(option2);
-            select.appendChild(option3);
-
-            select_set.appendChild(select);
-            creator.appendChild(select);
-
-            name.value = titel;
+            select.append(option1, option2, option3);
             select.value = priority;
+
+            creator.appendChild(select);
 
             tick.addEventListener("click", function () {
                 change(id, name.value, select.value);
             });
         }
-
+        // Inhalte des bearbeitenden Elements
         function change(id, input_value, select_value) {
+
+            let obj = select_box.querySelector(`[data-id="${id}"]`)
+
             for (let i = 0; i < input_fields.length; i++) {
                 if (input_fields[i].id == id) {
                     input_fields[i].priority = select_value;
@@ -358,7 +369,7 @@
                     break;
                 }
             }
-            console.log(input_fields)
+
 
             const trash = document.createElement("div");
             trash.classList.add("trash")
@@ -384,10 +395,11 @@
             box_priority.textContent = "Priorität: " + select_value;
             box_entry.classList.add("boxentry")
             box_priority.classList.add("priority_box")
-            element.appendChild(box_entry);
-            element.appendChild(box_priority)
-            element.appendChild(trash);
-            element.appendChild(edit);
+            obj.innerHTML = "";
+            obj.appendChild(box_entry);
+            obj.appendChild(box_priority)
+            obj.appendChild(trash);
+            obj.appendChild(edit);
 
 
 
@@ -402,7 +414,7 @@
             add();
 
         }
-
+        // Anlegen des neuen Listenelements zur erstellenden Liste
         function insertListname() {
             create_field = document.createElement("div");
             create_field.classList.add("create_field");
@@ -420,11 +432,11 @@
             name.placeholder = "Titel der Liste";
             name.classList.add("list_name");
             creator.appendChild(name);
-            const tick = document.createElement("div")
-            tick.textContent = "✓";
-            tick.classList.add("tick");
-            creator.appendChild(tick);
-            tick.addEventListener("click", function () {
+            const test_tick = document.createElement("div")
+            test_tick.textContent = "✓";
+            test_tick.classList.add("tick");
+            creator.appendChild(test_tick);
+            test_tick.addEventListener("click", function () {
                 if (name.value != "") {
                     background_div.remove();
                     saveList(name.value);
@@ -438,7 +450,7 @@
         }
 
         function saveList(listname) {
-            
+
             const payload = {
                 listname: listname,
                 todos: input_fields
@@ -450,11 +462,12 @@
                 },
                 body: JSON.stringify(payload)
             }).then(response => {
+
                 return response.json();
             })
                 .then(data => {
                     input_fields = [];
-                    
+
                     list_elem = document.createElement("div");
                     list_elem.classList.add("list_elem");
                     list_elem.dataset.id = data["listID"];
@@ -503,7 +516,8 @@
                 return response.json();
             })
                 .then(data => {
-                    history.pushState({offeneliste: "Super"}, "", "/dashboard");
+
+                    history.pushState({ offeneliste: "Super" }, "", "/dashboard");
                     window.location.href = "/open_list_page";
                 })
                 .catch(error => {
@@ -520,10 +534,11 @@
                 method: "GET",
 
             }).then(response => {
+
                 return response.json();
             })
                 .then(data => {
-                    
+
                     for (let i = 0; i < data.length; i++) {
                         list_elem = document.createElement("div");
                         list_elem.classList.add("list_elem");
@@ -533,6 +548,13 @@
                         const informations_box = document.createElement("div");
                         informations_box.classList.add("information_box");
                         list_elem.appendChild(informations_box);
+                        const delete_list = document.createElement("div");
+                        delete_list.textContent="🗑️";
+                        delete_list.dataset.id = data[i]["ListenID"];
+                        delete_list.classList.add("delete_list");
+                        delete_list.addEventListener("click",deletelist);
+
+                        list_elem.appendChild(delete_list);
                         const information = document.createElement("div");
                         information.classList.add("information");
                         informations_box.appendChild(information);
@@ -542,6 +564,8 @@
                         informations_box.appendChild(listenname);
                         listenname.textContent = data[i]["Listenname"];
 
+                        
+
                         repositionLists();
                     }
                 })
@@ -550,81 +574,87 @@
                 })
         }
 
-        document.getElementById("logout").addEventListener("click",()=>{
-            fetch("/logout",{
+        document.getElementById("logout").addEventListener("click", () => {
+            fetch("/logout", {
                 method: "GET",
-            }).then(response =>{
-                history.pushState({offeneliste: "Super"}, "", "/dashboard");
-                return; 
-            }).then(data =>{
-                    window.location.href = "/";
+            }).then(response => {
+                history.pushState({ offeneliste: "Super" }, "", "/dashboard");
+
+                return;
+            }).then(data => {
+
+                window.location.href = "/";
             }).catch(error => {
-                    console.error("Fehler", error);
-                })
+                console.error("Fehler", error);
+            })
         });
 
-        function add_liste_with_id(listenid){
-            
-            fetch("/add_list_with_id",{
-                method:"POST",
+        function add_liste_with_id(listenid) {
+
+            fetch("/add_list_with_id", {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ listenid: listenid})
+                body: JSON.stringify({ listenid: listenid })
             }).then(response => {
                 return response.json();
             })
                 .then(data => {
+                    if(data.error == null){
                     background_div.remove();
                     load_list(data[0]["ListenID"]);
-                    
-                    
-                    
+                    }else{
+                        alert("Sie haben die Liste bereits");
+                    }
+
+
                 })
                 .catch(error => {
                     console.error("Fehler", error);
                 })
         }
 
-        function load_list(listenid){
-            fetch("/load_list",{
-                method:"POST",
+        function load_list(listenid) {
+            fetch("/load_list", {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ listenid: listenid})
-            }).then(response =>{
+                body: JSON.stringify({ listenid: listenid })
+            }).then(response => {
+
                 return response.json();
-            }).then(data =>{
-                    var listID = data[0]["ListenID"];
-                    var listen_name = data[0]["Listenname"];
-                    list_elem = document.createElement("div");
-                    list_elem.classList.add("list_elem");
-                    list_elem.dataset.id = listID
-                    list_elem.addEventListener("click", openlist);
-                    document.body.appendChild(list_elem);
-                    const informations_box = document.createElement("div");
-                    informations_box.classList.add("information_box");
-                    list_elem.appendChild(informations_box);
-                    const information = document.createElement("div");
-                    information.classList.add("information");
-                    informations_box.appendChild(information);
-                    information.textContent = "#" + listID;
-                    const listenname = document.createElement("div");
-                    listenname.classList.add("listen_name");
-                    informations_box.appendChild(listenname);
-                    listenname.textContent = listen_name;
-                    repositionLists();
+            }).then(data => {
+                var listID = data[0]["ListenID"];
+                var listen_name = data[0]["Listenname"];
+                list_elem = document.createElement("div");
+                list_elem.classList.add("list_elem");
+                list_elem.dataset.id = listID
+                list_elem.addEventListener("click", openlist);
+                document.body.appendChild(list_elem);
+                const informations_box = document.createElement("div");
+                informations_box.classList.add("information_box");
+                list_elem.appendChild(informations_box);
+                const information = document.createElement("div");
+                information.classList.add("information");
+                informations_box.appendChild(information);
+                information.textContent = "#" + listID;
+                const listenname = document.createElement("div");
+                listenname.classList.add("listen_name");
+                informations_box.appendChild(listenname);
+                listenname.textContent = listen_name;
+                repositionLists();
             })
         }
 
-        document.getElementById("add_person_to_list").addEventListener("click",() =>{
-             background_div = document.createElement("div");
+        document.getElementById("add_person_to_list").addEventListener("click", () => {
+            background_div = document.createElement("div");
             background_div.classList.add("background_add");
             document.body.appendChild(background_div);
             select_box = document.createElement("div");
             select_box.classList.add("select_box");
-            
+
             background_div.appendChild(select_box);
             close_b = document.createElement("div");
             close_b.classList.add("close_b");
@@ -636,9 +666,9 @@
             select_box.appendChild(select_set);
 
 
-            const list_id= document.createElement("input");
+            const list_id = document.createElement("input");
             list_id.classList.add("input_listID");
-           list_id.placeholder= "Bitte geben Sie die ListenID ein"
+            list_id.placeholder = "Bitte geben Sie die ListenID ein"
             select_set.appendChild(list_id);
 
             const email_user = document.createElement("input");
@@ -646,63 +676,83 @@
             email_user.placeholder = "Bitte tragen Sie die E-Mail Adresse des Users ein";
             select_set.appendChild(email_user);
 
-           const submit = document.createElement("div");
-           submit.classList.add("submit")
-           submit.textContent= "✓";
-           select_set.appendChild(submit);
-           submit.addEventListener("click",()=>{
-            if(email_user.value != "" && list_id.value != ""){
-                fetch("/add_user",{
-                    method :"POST",
-                    headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email: email_user.value, listenid: list_id.value})
-                }).then(response =>{
-                    return response.json();
-                }).then(data =>{
-                    if(data.error=="Liste existiert nicht"){
-                        if(document.querySelector(".error")!= null){
-                            error.remove();
-                        }
-                        error = document.createElement("div");
-                        error.innerHTML = "Bitte geben Sie eine gültige ListenID ein"
-                        error.classList.add("error");
-                        select_set.appendChild(error);
+            const submit = document.createElement("div");
+            submit.classList.add("submit")
+            submit.textContent = "✓";
+            select_set.appendChild(submit);
+            submit.addEventListener("click", () => {
+                if (email_user.value != "" && list_id.value != "") {
+                    fetch("/add_user", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email: email_user.value, listenid: list_id.value })
+                    }).then(response => {
 
-                    }
-                    if(data.error=="User existiert nicht"){
-                        if(document.querySelector(".error") != null){
-                            error.remove();
+                        return response.json();
+                    }).then(data => {
+                        if (data.error == "Liste existiert nicht") {
+                            if (document.querySelector(".error") != null) {
+                                error.remove();
+                            }
+                            error = document.createElement("div");
+                            error.innerHTML = "Bitte geben Sie eine gültige ListenID ein"
+                            error.classList.add("error");
+                            select_set.appendChild(error);
+
                         }
-                        error = document.createElement("div");
-                        error.innerHTML = "Bitte geben Sie einen anderen User an"
-                        error.classList.add("error");
-                        select_set.appendChild(error);
-                    }
-                    if(data.status=="ok"){
-                        background_div.remove()
-                    }
-                }).catch(error =>{
+                        if (data.error == "User existiert nicht") {
+                            if (document.querySelector(".error") != null) {
+                                error.remove();
+                            }
+                            error = document.createElement("div");
+                            error.innerHTML = "Bitte geben Sie einen anderen User an"
+                            error.classList.add("error");
+                            select_set.appendChild(error);
+                        }
+                        if (data.status == "ok") {
+                            background_div.remove()
+                        }
+                    }).catch(error => {
                         console.error("Netzwerkfehler:", error);
-                })
+                    })
 
-            }else if(email_user.value == ""){
-                const miss_informationen = document.createElement("div");
-                miss_informationen.classList.add("miss_informationen");
-                miss_informationen.textContent="Bitte geben Sie eine E-Mail Adresse ein";
-                select_set.appendChild(miss_informationen);
+                } else if (email_user.value == "") {
+                    const miss_informationen = document.createElement("div");
+                    miss_informationen.classList.add("miss_informationen");
+                    miss_informationen.textContent = "Bitte geben Sie eine E-Mail Adresse ein";
+                    select_set.appendChild(miss_informationen);
 
-            }else{
-                const miss_informationen = document.createElement("div");
-                miss_informationen.classList.add("miss_informationen");
-                miss_informationen.textContent="Bitte geben Sie eine ListenID ein";
-                select_set.appendChild(miss_informationen);
-            }
-           })
+                } else {
+                    const miss_informationen = document.createElement("div");
+                    miss_informationen.classList.add("miss_informationen");
+                    miss_informationen.textContent = "Bitte geben Sie eine ListenID ein";
+                    select_set.appendChild(miss_informationen);
+                }
+            })
 
 
         });
+
+        function deletelist(e){
+           e.stopPropagation();
+           const button = e.currentTarget; 
+           fetch("/delete_list",{
+            method:"POST",
+            headers: {
+                            "Content-Type": "application/json"
+                        },
+            body: JSON.stringify({listenid : button.dataset.id})
+        }).then(response =>{
+                return response.json();
+        }).then(data =>{
+                
+        }).catch(error =>{
+
+        })
+           
+        }
 
 
 

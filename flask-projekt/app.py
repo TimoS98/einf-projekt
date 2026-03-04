@@ -6,6 +6,7 @@ app.secret_key = "secret"
 
 @app.route("/save_list",methods=["GET","POST"])
 def saveList():
+ print("ich bin in save_list")
  data = request.get_json()
  list_name = data["listname"]
  print(data)
@@ -90,6 +91,7 @@ def init_db():
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -200,24 +202,33 @@ def backward():
 
 @app.route("/add_list_with_id",methods=["GET","POST"])
 def add_list_with_id():
+   
    data = request.get_json()
    listen_id = data["listenid"]
    conn = sqlite3.connect("todo.db")
    conn.row_factory = sqlite3.Row
    cursor = conn.cursor()
-   cursor.execute("""
+   vorhanden = cursor.execute("""
+                         SELECT * FROM userLists  WHERE  ListenID = ? AND UserID = ?
+                              """,(listen_id,session["user_id"])).fetchone()
+   print(vorhanden)
+   if vorhanden is  None: 
+    cursor.execute("""
         INSERT INTO userLists (UserID, ListenID)
         VALUES (?,?)
     """,(session["user_id"],listen_id,))
-   conn.commit()
-   neue_Liste = cursor.execute("""
+    conn.commit()
+    neue_Liste = cursor.execute("""
         SELECT Listenname, ListenID
         FROM Listen
         WHERE ListenID = ?
     """,(listen_id,)).fetchone()
-   print(dict(neue_Liste))
-   conn.close()
-   return jsonify([dict(neue_Liste)]) 
+    print(dict(neue_Liste))
+    conn.close()
+    return jsonify([dict(neue_Liste)]) 
+   else: 
+       return jsonify({"error": "Liste existiert schon"}), 404
+      
 
 
 @app.route("/load_list",methods=["GET","POST"])
@@ -261,6 +272,29 @@ def add_user():
        return jsonify({"status": "ok"})
    else: 
        return jsonify({"error": "Nicht eingeloggt"}), 403
+@app.route("/delete_list",methods=["GET","POST"])
+def delete_liste():
+    if "user_id" in session:
+        data = request.get_json()
+        list_id = data["listenid"]
+        conn = sqlite3.connect("todo.db")
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(""" 
+               DELETE FROM userLists WHERE userID = ? AND ListenID = ?         
+        """,(session["user_id"],list_id))
+        
+        listen = cursor.execute(""" 
+                SELECT * userLists WHERE   ListenID = ?      
+                       """,(list_id,)).fetchall()
+        if listen is None:
+            cursor.execute("""
+                           DELETE * FROM Listen WHERE ListenID = ?
+                           """,(list_id,))
+            cursor.execute("""
+                           DELETE * FROM todo WHERE ListenID = ?
+                           """,(list_id))
+        
     
 init_db()  
 if __name__ == "__main__":
