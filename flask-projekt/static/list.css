@@ -21,21 +21,21 @@ html {
     user-select: none;
     background-color: rgba(28, 195, 181, 0.4);
 
-   
+
 
 
 
 }
 
-#logout{
- font-size: 400%;
- 
- margin-left: 88%;
+#logout {
+    font-size: 400%;
+
+    margin-left: 88%;
 }
 
-#logout:hover{
- color: red;
- cursor: pointer;
+#logout:hover {
+    color: red;
+    cursor: pointer;
 }
 
 #done {
@@ -129,7 +129,7 @@ html {
 }
 
 #add_one:hover {
-     background-color: rgba(28, 195, 181, 0.4);
+    background-color: rgba(28, 195, 181, 0.4);
     cursor: pointer;
     box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.5);
 }
@@ -192,7 +192,7 @@ html {
     position: relative;
     overflow-y: auto;
 
-    
+
 
 
 }
@@ -459,20 +459,21 @@ html {
     cursor: pointer;
 }
 
-.boxentry{
+.boxentry {
     flex: 1;
     padding: 4px 8px;
     font-size: 14px;
 
 }
 
-.priority_box{
-     flex: 1;
+.priority_box {
+    flex: 1;
     padding: 4px 8px;
     font-size: 14px;
 
 }
-.home{
+
+.home {
     width: 3vh;
     height: 3vh;
     background-color: lightgrey;
@@ -488,13 +489,13 @@ html {
 
 }
 
-.home:hover{
+.home:hover {
     box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.5);
     cursor: pointer;
 }
 
-.forward{
-     width: 10%;
+.forward {
+    width: 10%;
     height: 2vh;
     background-color: lightgreen;
     border-radius: 20px;
@@ -508,12 +509,12 @@ html {
     font-size: 100%;
 }
 
-.forward:hover{
+.forward:hover {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     cursor: pointer;
 }
 
-.list_name{
+.list_name {
     width: 80%;
     height: 2vh;
     background: transparent;
@@ -528,81 +529,157 @@ html {
     outline: none;
 }
 
-.creator_listname{
-   height: 20vh;
+.creator_listname {
+    height: 20vh;
     width: 30%;
     background-color: white;
     border-radius: 8px;
     border: 1px solid black;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    position: relative; 
+    position: relative;
 }
-.empty{
+
+.empty {
     color: red;
     justify-content: center;
     align-items: center;
     height: 2vh;
-    top:55%;
+    top: 55%;
     left: 2%;
     position: absolute;
-    
+
 }
 
-.list_elem{
+.list_elem {
     position: absolute;
     top: 15vh;
-    
+
     height: 25vh;
-    width: 10%; 
+    width: 10%;
     border: 1px solid black;
     border-radius: 5px;
 }
 
-.list_elem:hover{
-        box-shadow:
+.list_elem:hover {
+    box-shadow:
         0 4px 8px rgba(0, 0, 0, 0.08),
         0 8px 16px rgba(0, 0, 0, 0.08),
         0 16px 32px rgba(0, 0, 0, 0.12),
         0 32px 64px rgba(0, 0, 0, 0.15);
     cursor: pointer;
 }
-.information_box{
-    height: 7vh;;
+
+.information_box {
+    height: 7vh;
+    ;
     width: 100%;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     background-color: lightgray;
-    margin-top: 18vh; 
+    margin-top: 18vh;
     justify-content: center;
     align-items: center;
     font-size: 170%;
     overflow: hidden;
-   
+
 
 }
 
-.listen_name{
+.listen_name {
     justify-content: center;
     display: flex;
     align-items: center;
-    overflow-wrap:break-word;
-    
-    
-   
-    
+    overflow-wrap: break-word;
+
+
+
+
     width: 100%;
-    
+
 }
-.information{
+
+.information {
     display: flex;
     justify-content: center;
-    align-items:center;
- 
-     width: 100%;
+    align-items: center;
+
+    width: 100%;
 
 }
 
-#warning{
+#warning {
     color: red;
 }
 
+#add_person_to_list {
+    height: 80px;
+    width: 80px;
+    background-color: rgba(28, 195, 181, 0.4);
+    margin-top: 73vh;
+    border-radius: 40px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 180%;
+    margin-left: 95vw;
+    position: fixed;
+    z-index: 9999;
+}
+
+#add_user {
+    height: 100%;
+    width: 100%;
+}
+
+#add_person_to_list:hover {
+    background-color: rgba(28, 195, 181, 0.4);
+    cursor: pointer;
+    box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.email_user {
+    height: 3vh;
+    width: 80%;
+    margin-left: 10%;
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: black;
+    width: 80%;
+    height: 3vh;
+    font-size: 200%;
+    border-radius: 8px;
+    margin-top: 2%;
+}
+
+.input_listID {
+    height: 3vh;
+    width: 80%;
+    margin-left: 10%;
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: black;
+    width: 80%;
+    height: 3vh;
+    font-size: 200%;
+    border-radius: 8px;
+
+}
+
+.submit {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgreen;
+    height: 3vh;
+    width: 3vh;
+    border: 1px solid black;
+    bottom: 8%;
+    right: 5%;
+    border-radius: 999px;
+}
+.submit:hover{
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

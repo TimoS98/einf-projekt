@@ -11,8 +11,12 @@
         <img src="{{ url_for('static', filename='shopping_cart.png') }}" id="shoping_cart" />
         <div id="logout">⏻</div>
     </div>
-
+    <div id="add_person_to_list">
+        <img src="{{ url_for('static', filename='user.png') }}" id = "add_user"/>
+    </div>
     <div id="add_one">+</div>
+
+
 
 
     </div>
@@ -28,6 +32,7 @@
         let counter = 0;
         var backward;
         var list_elem;
+        var error;
 
         document.getElementById("add_one").addEventListener("click", add);
 
@@ -612,6 +617,92 @@
                     repositionLists();
             })
         }
+
+        document.getElementById("add_person_to_list").addEventListener("click",() =>{
+             background_div = document.createElement("div");
+            background_div.classList.add("background_add");
+            document.body.appendChild(background_div);
+            select_box = document.createElement("div");
+            select_box.classList.add("select_box");
+            
+            background_div.appendChild(select_box);
+            close_b = document.createElement("div");
+            close_b.classList.add("close_b");
+            close_b.textContent = "✕";
+            select_box.appendChild(close_b);
+            close_b.addEventListener("click", close_all);
+            select_set = document.createElement("div");
+            select_set.classList.add("select_set");
+            select_box.appendChild(select_set);
+
+
+            const list_id= document.createElement("input");
+            list_id.classList.add("input_listID");
+           list_id.placeholder= "Bitte geben Sie die ListenID ein"
+            select_set.appendChild(list_id);
+
+            const email_user = document.createElement("input");
+            email_user.classList.add("email_user");
+            email_user.placeholder = "Bitte tragen Sie die E-Mail Adresse des Users ein";
+            select_set.appendChild(email_user);
+
+           const submit = document.createElement("div");
+           submit.classList.add("submit")
+           submit.textContent= "✓";
+           select_set.appendChild(submit);
+           submit.addEventListener("click",()=>{
+            if(email_user.value != "" && list_id.value != ""){
+                fetch("/add_user",{
+                    method :"POST",
+                    headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email: email_user.value, listenid: list_id.value})
+                }).then(response =>{
+                    return response.json();
+                }).then(data =>{
+                    if(data.error=="Liste existiert nicht"){
+                        if(document.querySelector(".error")!= null){
+                            error.remove();
+                        }
+                        error = document.createElement("div");
+                        error.innerHTML = "Bitte geben Sie eine gültige ListenID ein"
+                        error.classList.add("error");
+                        select_set.appendChild(error);
+
+                    }
+                    if(data.error=="User existiert nicht"){
+                        if(document.querySelector(".error") != null){
+                            error.remove();
+                        }
+                        error = document.createElement("div");
+                        error.innerHTML = "Bitte geben Sie einen anderen User an"
+                        error.classList.add("error");
+                        select_set.appendChild(error);
+                    }
+                    if(data.status=="ok"){
+                        background_div.remove()
+                    }
+                }).catch(error =>{
+                        console.error("Netzwerkfehler:", error);
+                })
+
+            }else if(email_user.value == ""){
+                const miss_informationen = document.createElement("div");
+                miss_informationen.classList.add("miss_informationen");
+                miss_informationen.textContent="Bitte geben Sie eine E-Mail Adresse ein";
+                select_set.appendChild(miss_informationen);
+
+            }else{
+                const miss_informationen = document.createElement("div");
+                miss_informationen.classList.add("miss_informationen");
+                miss_informationen.textContent="Bitte geben Sie eine ListenID ein";
+                select_set.appendChild(miss_informationen);
+            }
+           })
+
+
+        });
 
 
 

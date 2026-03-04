@@ -232,6 +232,36 @@ def load_list():
 """,(listen_id,)).fetchone()
    conn.close()
    return [dict(liste)]
+
+@app.route("/add_user",methods=["GET","POST"])
+def add_user():
+   if "user_id" in session:
+      data = request.get_json()
+      user_email = data["email"]
+      list_id = data["listenid"]
+      conn = sqlite3.connect("todo.db")
+      conn.row_factory = sqlite3.Row
+      cursor = conn.cursor()
+      user_exists = cursor.execute("""
+        SELECT * FROM users WHERE email = ?
+        """,(user_email,)).fetchone() 
+      if user_exists is None:
+       conn.close()
+       return jsonify({"error": "User existiert nicht"}), 404
+      list_exist = cursor.execute("""
+        SELECT * FROM Listen WHERE ListenID = ?
+        """,(list_id,)).fetchone() 
+      if list_exist is None:
+       conn.close()
+       return jsonify({"error": "Liste existiert nicht"}), 404
+      else:
+       cursor.execute("""INSERT INTO userLists (UserID,ListenID) VALUES(?,?)""",(user_exists["UserID"],list_id))
+       conn.commit()
+       conn.close()
+       return jsonify({"status": "ok"})
+   else: 
+       return jsonify({"error": "Nicht eingeloggt"}), 403
+    
 init_db()  
 if __name__ == "__main__":
     app.run(debug=True)
