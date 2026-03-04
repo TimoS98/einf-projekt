@@ -283,18 +283,23 @@ def delete_liste():
         cursor.execute(""" 
                DELETE FROM userLists WHERE userID = ? AND ListenID = ?         
         """,(session["user_id"],list_id))
-        
+        conn.commit()
         listen = cursor.execute(""" 
-                SELECT * userLists WHERE   ListenID = ?      
+                SELECT * FROM userLists WHERE   ListenID = ?      
                        """,(list_id,)).fetchall()
         if listen is None:
             cursor.execute("""
                            DELETE * FROM Listen WHERE ListenID = ?
                            """,(list_id,))
+            conn.commit()
             cursor.execute("""
                            DELETE * FROM todo WHERE ListenID = ?
                            """,(list_id))
-        
+            conn.commit()
+            conn.close()
+            return jsonify({"status": "Liste gelöscht"})
+        conn.close()
+        return jsonify({"status": "Liste gelöscht"})
     
 init_db()  
 if __name__ == "__main__":
