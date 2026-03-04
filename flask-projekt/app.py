@@ -119,8 +119,7 @@ def home():
             return render_template("listen.html")
     elif request.method == "GET":
      return  render_template("login.html")
-
-
+ 
 
 @app.route("/anmelden",methods=["GET","POST"])
 def register():
@@ -139,6 +138,7 @@ def register():
         conn.commit()
         conn.close()
         return redirect(url_for("home"))
+
     
     return render_template("anmelden.html")
 
@@ -272,6 +272,8 @@ def add_user():
        return jsonify({"status": "ok"})
    else: 
        return jsonify({"error": "Nicht eingeloggt"}), 403
+
+
 @app.route("/delete_list",methods=["GET","POST"])
 def delete_liste():
     if "user_id" in session:
@@ -294,8 +296,14 @@ def delete_liste():
             cursor.execute("""
                            DELETE * FROM todo WHERE ListenID = ?
                            """,(list_id))
-        
-    
+
+
+      
+@app.route("/login",methods=["GET"])
+def anmelden_link():
+   return render_template("login.html") 
+
+
 init_db()  
 if __name__ == "__main__":
     app.run(debug=True)

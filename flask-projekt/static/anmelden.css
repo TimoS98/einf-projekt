@@ -60,3 +60,10 @@ margin-top: 2%;
     margin-left: 70%;
     height: 5%;
 }
+
+#anmelde_link{
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
