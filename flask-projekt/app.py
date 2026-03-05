@@ -285,24 +285,27 @@ def delete_liste():
         cursor.execute(""" 
                DELETE FROM userLists WHERE userID = ? AND ListenID = ?         
         """,(session["user_id"],list_id))
-        
+        conn.commit()
         listen = cursor.execute(""" 
-                SELECT * userLists WHERE   ListenID = ?      
+                SELECT * FROM userLists WHERE   ListenID = ?      
                        """,(list_id,)).fetchall()
-        if listen is None:
+        if not listen:
             cursor.execute("""
-                           DELETE * FROM Listen WHERE ListenID = ?
+                           DELETE  FROM Listen WHERE ListenID = ?
                            """,(list_id,))
+            conn.commit()
             cursor.execute("""
-                           DELETE * FROM todo WHERE ListenID = ?
-                           """,(list_id))
-
-
-      
+                           DELETE  FROM todo WHERE ListenID = ?
+                           """,(list_id,))
+            conn.commit()
+            conn.close()
+            return jsonify({"status": "Liste gelöscht"})
+        conn.close()
+        return jsonify({"status": "Liste gelöscht"})
+    
 @app.route("/login",methods=["GET"])
 def anmelden_link():
-   return render_template("login.html") 
-
+   return render_template("login.html")
 
 init_db()  
 if __name__ == "__main__":

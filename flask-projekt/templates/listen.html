@@ -414,8 +414,9 @@
             add();
 
         }
-        // Anlegen des neuen Listenelements zur erstellenden Liste
+        // erstellen einer neuen Liste 
         function insertListname() {
+            
             create_field = document.createElement("div");
             create_field.classList.add("create_field");
             select_box.appendChild(create_field);
@@ -484,6 +485,12 @@
                     listenname.classList.add("listen_name");
                     informations_box.appendChild(listenname);
                     listenname.textContent = data["listenname"];
+                     const delete_list = document.createElement("div");
+                    delete_list.textContent="🗑️";
+                    delete_list.dataset.id = data["ListenID"];
+                    delete_list.classList.add("delete_list");
+                    delete_list.addEventListener("click",deletelist);
+                    list_elem.appendChild(delete_list);
 
                     repositionLists();
                 })
@@ -626,6 +633,7 @@
 
                 return response.json();
             }).then(data => {
+                console.log("Ich erstelle nun eine Liste")
                 var listID = data[0]["ListenID"];
                 var listen_name = data[0]["Listenname"];
                 list_elem = document.createElement("div");
@@ -633,6 +641,12 @@
                 list_elem.dataset.id = listID
                 list_elem.addEventListener("click", openlist);
                 document.body.appendChild(list_elem);
+                const delete_list = document.createElement("div");
+                delete_list.textContent="🗑️";
+                delete_list.dataset.id = data[0]["ListenID"];
+                delete_list.classList.add("delete_list");
+                delete_list.addEventListener("click",deletelist);
+                list_elem.appendChild(delete_list);
                 const informations_box = document.createElement("div");
                 informations_box.classList.add("information_box");
                 list_elem.appendChild(informations_box);
@@ -747,7 +761,9 @@
         }).then(response =>{
                 return response.json();
         }).then(data =>{
-                
+             if (data.error == null){
+                button.parentElement.remove();
+             }   
         }).catch(error =>{
 
         })
