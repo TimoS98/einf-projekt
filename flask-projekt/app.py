@@ -303,6 +303,10 @@ def delete_liste():
         conn.close()
         return jsonify({"status": "Liste gelöscht"})
     
+@app.route("/login",methods=["GET"])
+def anmelden_link():
+   return render_template("login.html")
+
 init_db()  
 if __name__ == "__main__":
     app.run(debug=True)
