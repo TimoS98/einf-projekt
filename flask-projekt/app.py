@@ -287,14 +287,14 @@ def delete_liste():
         listen = cursor.execute(""" 
                 SELECT * FROM userLists WHERE   ListenID = ?      
                        """,(list_id,)).fetchall()
-        if listen is None:
+        if not listen:
             cursor.execute("""
-                           DELETE * FROM Listen WHERE ListenID = ?
+                           DELETE  FROM Listen WHERE ListenID = ?
                            """,(list_id,))
             conn.commit()
             cursor.execute("""
-                           DELETE * FROM todo WHERE ListenID = ?
-                           """,(list_id))
+                           DELETE  FROM todo WHERE ListenID = ?
+                           """,(list_id,))
             conn.commit()
             conn.close()
             return jsonify({"status": "Liste gelöscht"})
