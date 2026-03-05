@@ -633,7 +633,7 @@
 
                 return response.json();
             }).then(data => {
-                console.log("Ich erstelle nun eine Liste")
+               
                 var listID = data[0]["ListenID"];
                 var listen_name = data[0]["Listenname"];
                 list_elem = document.createElement("div");
@@ -763,6 +763,7 @@
         }).then(data =>{
              if (data.error == null){
                 button.parentElement.remove();
+                repositionLists();
              }   
         }).catch(error =>{
 
