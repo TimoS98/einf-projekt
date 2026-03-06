@@ -33,13 +33,14 @@
         var backward;
         var list_elem;
         var error;
-
+        // öffnen des Menü zum Hinzufügen von Listen
         document.getElementById("add_one").addEventListener("click", add);
-
+        
+        // Listenanordnung berechnen beim verkleinern des Browserfensters
         window.addEventListener("resize", function () {
             repositionLists();
         });
-
+        // Homemenü Listen hinzufügen 
         function add() {
             background_div = document.createElement("div");
             background_div.classList.add("background_add");
@@ -73,7 +74,7 @@
                 newList();
             });
         }
-
+        // Menü Liste per ID importieren 
         function listID() {
             select_set.innerHTML = "";
             const list_id = document.createElement("input");
@@ -102,12 +103,13 @@
             back.addEventListener("click", goback);
 
         }
-
+        // Aus dem ListenID Menü zurück ins Home Menü 
         function goback() {
             select_set.innerHTML = "";
             background_div.remove();
             add();
         }
+        // öffnen des menü zum manuellen Listen erstellen 
         function newList() {
             select_set.innerHTML = "";
             const new_elem = document.createElement("div");
@@ -145,6 +147,7 @@
 
 
         }
+       // Schließen des Menüs 
         function close_all() {
             if (background_div) {
                 background_div.remove();
@@ -153,6 +156,7 @@
                 select_set = null;
             }
         }
+        // Funktion zum hinzufügen eines weiteren Elementes
         function add_next() {
 
             create_field = document.createElement("div");
@@ -208,7 +212,7 @@
             });
 
         }
-
+        // schließen des Creators
         function cl_creator() {
             create_field.remove();
         }
@@ -405,6 +409,7 @@
 
 
         }
+        // schließen des Hauptmenüs
         function home() {
             input_fields = [];
             background_div.remove();
@@ -449,7 +454,7 @@
                 }
             });
         }
-
+        // speichern einer Liste durch betätigen des Tick buttons 
         function saveList(listname) {
 
             const payload = {
@@ -509,7 +514,7 @@
                     console.error("Fehler", error);
                 })
         }
-
+        // Berechnung Anordnung der Listenanordnung 
         function repositionLists() {
 
             let elements = document.querySelectorAll(".list_elem");
@@ -523,6 +528,7 @@
             });
         }
 
+        // Große Listenansicht öffnen 
         function openlist() {
             fetch("/open_list", {
                 method: "POST",
@@ -546,7 +552,7 @@
             listenladen();
         });
 
-
+        // Laden der Listen nach Login oder refresh der Seite 
         function listenladen() {
             fetch("/listen.html", {
                 method: "GET",
@@ -612,7 +618,7 @@
                 console.error("Fehler", error);
             })
         });
-
+        // Hinzufügen einer Liste per ID (import)
         function add_liste_with_id(listenid) {
 
             fetch("/add_list_with_id", {
@@ -638,7 +644,7 @@
                     console.error("Fehler", error);
                 })
         }
-
+        // laden einer einzelnen Liste nach dem erstellen 
         function load_list(listenid) {
             fetch("/load_list", {
                 method: "POST",
@@ -777,7 +783,7 @@
 
 
         });
-
+        // Löschen einer Liste 
         function deletelist(e) {
             e.stopPropagation();
             const button = e.currentTarget;
@@ -799,7 +805,7 @@
             })
 
         }
-
+        // bearbeiten(abhaken von Einträgen) einer Liste 
         function edit_but(e) {
             e.stopPropagation();
             parent = e.currentTarget.parentElement
@@ -951,7 +957,7 @@
             })
 
         }
-
+        // Ändern des Listennamens 
         function edit_listname(new_todo_list, id_list,current_list_name) {
             create_field = document.createElement("div");
             create_field.classList.add("create_field");
@@ -986,7 +992,7 @@
                 }
             });
         }
-
+        // speichern der modifizierten Liste 
         function save_modified_list(new_todo_list, id_list,current_list_name) {
             console.log(current_list_name)
             payload = {

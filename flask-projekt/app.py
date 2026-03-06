@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "secret"
-
+# speichern einer neuen Liste in der DB 
 @app.route("/save_list",methods=["GET","POST"])
 def saveList():
  print("ich bin in save_list")
@@ -45,6 +45,7 @@ def saveList():
 
  return jsonify({"listID":last_list_insert, "listenname":list_name})
 
+# Initliasierung der DB
 def init_db():
     conn = sqlite3.connect("todo.db")
     cursor = conn.cursor()
@@ -88,15 +89,14 @@ def init_db():
 
     conn.commit()
     conn.close()
-
+# Abfragen von Logindaten aus der DB 
 @app.route("/", methods=["GET", "POST"])
 def home():
     
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-       # print("Username:", username)
-       # print("Password:", password)
+      
         conn = sqlite3.connect("todo.db")
         conn.row_factory = sqlite3.Row 
         cursor = conn.cursor()
@@ -120,7 +120,7 @@ def home():
     elif request.method == "GET":
      return  render_template("login.html")
  
-
+# Neu registrieren in der Anwendung und Nutzerdaten speichern in DB 
 @app.route("/anmelden",methods=["GET","POST"])
 def register():
     if request.method=="POST":
@@ -141,7 +141,7 @@ def register():
 
     
     return render_template("anmelden.html")
-
+# öffnen einer Liste und dazugehörige Einträge laden 
 @app.route("/open_list",methods=["POST","GET"])
 def open_list():
    if "user_id" in session: #abfangen von wieder in die liste kommen nach loggout(geht nicht. zurückknopf keine neue request)
@@ -150,7 +150,7 @@ def open_list():
     return jsonify({"status":"ok"}) 
 
 
-
+# öffnen einer Liste 
 @app.route("/open_list_page",methods=["POST","GET"])
 def open_list_page():
    
@@ -170,7 +170,7 @@ def open_list_page():
   
    return  render_template("listen_einsicht.html", todos=todos)
 
-
+#laden aller Listen des angemeldeten Users 
 @app.route("/listen.html",methods=["POST","GET"])
 def lists():
    if request.method=="GET":
@@ -186,20 +186,22 @@ def lists():
       listen = cursor.fetchall()
       conn.close()
       return jsonify([dict(liste) for liste in listen])
-   
+
+# logout des Users und löschen der Session   
 @app.route("/logout",methods=["POST","GET"])
 def logout(): 
     if request.method == "GET":
        session.clear() 
        
        return render_template("login.html")
-    
+#Prüfung, ob der User angemeldet ist    
 @app.route("/backward",methods=["POST","GET"])
 def backward():
    if "user_id" in session:
       return render_template("listen.html")
    return render_template("login.html")
 
+# Verknüpfen eines Users mit einer Liste 
 @app.route("/add_list_with_id",methods=["GET","POST"])
 def add_list_with_id():
    
@@ -230,7 +232,7 @@ def add_list_with_id():
        return jsonify({"error": "Liste existiert schon"}), 404
       
 
-
+# laden einer Liste 
 @app.route("/load_list",methods=["GET","POST"])
 def load_list():
    data = request.get_json()
@@ -243,7 +245,7 @@ def load_list():
 """,(listen_id,)).fetchone()
    conn.close()
    return [dict(liste)]
-
+# User zu einer Liste mittels email und ListenID hinzufügen 
 @app.route("/add_user",methods=["GET","POST"])
 def add_user():
    if "user_id" in session:
@@ -273,7 +275,7 @@ def add_user():
    else: 
        return jsonify({"error": "Nicht eingeloggt"}), 403
 
-
+# löschen einer Liste aus der DB 
 @app.route("/delete_list",methods=["GET","POST"])
 def delete_liste():
     if "user_id" in session:
@@ -302,11 +304,11 @@ def delete_liste():
             return jsonify({"status": "Liste gelöscht"})
         conn.close()
         return jsonify({"status": "Liste gelöscht"})
-    
+# wechsel von register zu anmelden    
 @app.route("/",methods=["GET"])
 def anmelden_link():
    return render_template("login.html")
-
+# laden einer Liste aus der DB 
 @app.route("/take_list",methods=["GET","POST"])
 def  take_list():
   if "user_id" in session:
@@ -332,7 +334,7 @@ def  take_list():
     conn.close()
     return jsonify({"listenname": listenname["Listenname"],"todos": [dict(entry) for entry in list_content]})
   return render_template("login.html")
-
+# abspecpeichern der modifizierten Liste 
 @app.route("/save_modified_list",methods=["POST","GET"])
 def save_modified_list():
     data = request.get_json()
