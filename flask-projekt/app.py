@@ -6,10 +6,10 @@ app.secret_key = "secret"
 # speichern einer neuen Liste in der DB 
 @app.route("/save_list",methods=["GET","POST"])
 def saveList():
- print("ich bin in save_list")
+ 
  data = request.get_json()
  list_name = data["listname"]
- print(data)
+ 
  conn = sqlite3.connect("todo.db")
  cursor = conn.cursor()
  cursor.execute(
@@ -213,7 +213,7 @@ def add_list_with_id():
    vorhanden = cursor.execute("""
                          SELECT * FROM userLists  WHERE  ListenID = ? AND UserID = ?
                               """,(listen_id,session["user_id"])).fetchone()
-   print(vorhanden)
+   
    if vorhanden is  None: 
     cursor.execute("""
         INSERT INTO userLists (UserID, ListenID)
@@ -225,7 +225,7 @@ def add_list_with_id():
         FROM Listen
         WHERE ListenID = ?
     """,(listen_id,)).fetchone()
-    print(dict(neue_Liste))
+    
     conn.close()
     return jsonify([dict(neue_Liste)]) 
    else: 
@@ -339,11 +339,10 @@ def  take_list():
 def save_modified_list():
     data = request.get_json()
     list_name = data["listname"]
-    print(list_name)
+    
     id_list = data["id_list"]
     modified_todo_list = data["new_todo_list"]
-    print(id_list)
-    print(modified_todo_list)
+    
     conn = sqlite3.connect("todo.db")
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()

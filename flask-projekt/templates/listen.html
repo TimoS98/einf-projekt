@@ -887,7 +887,7 @@
                         for (let i = 0; i < todo.length; i++) {
                             if (todo[i]["id"] == id) {
                                 todo.splice(i, 1);
-                                console.log(todo)
+                                
                                 break;
                             }
                         }
@@ -942,7 +942,7 @@
                                 if (todo[i]["id"] == obj.dataset.id) {
                                     todo[i]["prio"] = select.value;
                                     todo[i]["name"] = name.value;
-                                    console.log(todo)
+                                    
                                     break;
                                 }
                             }
@@ -994,7 +994,7 @@
         }
         // speichern der modifizierten Liste 
         function save_modified_list(new_todo_list, id_list,current_list_name) {
-            console.log(current_list_name)
+           
             payload = {
                 listname : current_list_name,
                 id_list: id_list,
