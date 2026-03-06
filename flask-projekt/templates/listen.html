@@ -518,12 +518,12 @@
         function repositionLists() {
 
             let elements = document.querySelectorAll(".list_elem");
-            let space_per_row = Math.floor(1 / 0.12);
+            let space_per_row = Math.floor(1 / 0.17);
             elements.forEach((element, index) => {
                 let col = index % space_per_row;
                 let row = Math.floor(index / space_per_row);
 
-                element.style.left = (2 + col * 12) + "%";
+                element.style.left = (2 + col * 17) + "%";
                 element.style.top = (15 + row * 27) + "vh";
             });
         }
