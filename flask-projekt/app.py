@@ -307,6 +307,65 @@ def delete_liste():
 def anmelden_link():
    return render_template("login.html")
 
+@app.route("/take_list",methods=["GET","POST"])
+def  take_list():
+  if "user_id" in session:
+    data = request.get_json()
+    list_id = data["id"]
+    conn = sqlite3.connect("todo.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+ 
+    list_content = cursor.execute("""
+                SELECT * FROM todo WHERE ListenID = ?
+                """,(list_id,)).fetchall()
+    listenname = cursor.execute("""
+                                SELECT Listenname FROM Listen WHERE ListenID = ?
+                                """,(list_id,)).fetchone()
+    
+    if not list_content:
+        conn.close()
+        return jsonify({"error":"Die Liste existiert nicht"})
+    
+    
+    
+    conn.close()
+    return jsonify({"listenname": listenname["Listenname"],"todos": [dict(entry) for entry in list_content]})
+  return render_template("login.html")
+
+@app.route("/save_modified_list",methods=["POST","GET"])
+def save_modified_list():
+    data = request.get_json()
+    list_name = data["listname"]
+    print(list_name)
+    id_list = data["id_list"]
+    modified_todo_list = data["new_todo_list"]
+    print(id_list)
+    print(modified_todo_list)
+    conn = sqlite3.connect("todo.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+             DELETE FROM todo WHERE ListenID = ?      
+                   """,(id_list,))
+    conn.commit()
+    for elements in modified_todo_list:
+        cursor.execute("""
+                    INSERT INTO todo (ListenID, Prioritaet, Name)
+            VALUES (?, ?, ?)
+                       """,(id_list,elements["prio"],elements["name"]))
+        conn.commit()
+        
+    cursor.execute("""
+                   UPDATE Listen SET listenname = ? WHERE ListenID = ? 
+                   """,(list_name,id_list,)) 
+    conn.commit()
+       
+    conn.close()
+       
+    
+    return jsonify({"listname":list_name})
+
 init_db()  
 if __name__ == "__main__":
     app.run(debug=True)

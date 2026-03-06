@@ -344,9 +344,9 @@
             const select = document.createElement("select");
             select.classList.add("priority_select");
 
-            const option1 = new Option("Niedrig", "low");
-            const option2 = new Option("Mittel", "medium");
-            const option3 = new Option("Hoch", "high");
+            const option1 = new Option("Niedrig", "niedrig");
+            const option2 = new Option("Mittel", "mittel");
+            const option3 = new Option("Hoch", "hoch");
 
             select.append(option1, option2, option3);
             select.value = priority;
@@ -416,7 +416,7 @@
         }
         // erstellen einer neuen Liste 
         function insertListname() {
-            
+
             create_field = document.createElement("div");
             create_field.classList.add("create_field");
             select_box.appendChild(create_field);
@@ -485,12 +485,23 @@
                     listenname.classList.add("listen_name");
                     informations_box.appendChild(listenname);
                     listenname.textContent = data["listenname"];
-                     const delete_list = document.createElement("div");
-                    delete_list.textContent="🗑️";
+
+                    const edit_current_list = document.createElement("div");
+                    edit_current_list.textContent = "🔨";
+                    edit_current_list.dataset.id = data["listID"];
+                    edit_current_list.classList.add("edit_list")
+                    edit_current_list.addEventListener("click", edit_but);
+                    list_elem.appendChild(edit_current_list);
+
+
+                    const delete_list = document.createElement("div");
+                    delete_list.textContent = "🗑️";
                     delete_list.dataset.id = data["ListenID"];
                     delete_list.classList.add("delete_list");
-                    delete_list.addEventListener("click",deletelist);
+                    delete_list.addEventListener("click", deletelist);
                     list_elem.appendChild(delete_list);
+
+
 
                     repositionLists();
                 })
@@ -556,11 +567,17 @@
                         informations_box.classList.add("information_box");
                         list_elem.appendChild(informations_box);
                         const delete_list = document.createElement("div");
-                        delete_list.textContent="🗑️";
+                        delete_list.textContent = "🗑️";
                         delete_list.dataset.id = data[i]["ListenID"];
                         delete_list.classList.add("delete_list");
-                        delete_list.addEventListener("click",deletelist);
+                        delete_list.addEventListener("click", deletelist);
 
+                        const edit_current_list = document.createElement("div");
+                        edit_current_list.classList.add("edit_list")
+                        edit_current_list.dataset.id = data[0]["ListenID"];
+                        edit_current_list.textContent = "🔨";
+                        edit_current_list.addEventListener("click", edit_but);
+                        list_elem.appendChild(edit_current_list);
                         list_elem.appendChild(delete_list);
                         const information = document.createElement("div");
                         information.classList.add("information");
@@ -571,7 +588,7 @@
                         informations_box.appendChild(listenname);
                         listenname.textContent = data[i]["Listenname"];
 
-                        
+
 
                         repositionLists();
                     }
@@ -608,10 +625,10 @@
                 return response.json();
             })
                 .then(data => {
-                    if(data.error == null){
-                    background_div.remove();
-                    load_list(data[0]["ListenID"]);
-                    }else{
+                    if (data.error == null) {
+                        background_div.remove();
+                        load_list(data[0]["ListenID"]);
+                    } else {
                         alert("Sie haben die Liste bereits");
                     }
 
@@ -633,7 +650,7 @@
 
                 return response.json();
             }).then(data => {
-               
+
                 var listID = data[0]["ListenID"];
                 var listen_name = data[0]["Listenname"];
                 list_elem = document.createElement("div");
@@ -641,12 +658,24 @@
                 list_elem.dataset.id = listID
                 list_elem.addEventListener("click", openlist);
                 document.body.appendChild(list_elem);
+
+                const edit_current_list = document.createElement("div");
+                edit_current_list.classList.add("edit_list")
+                edit_current_list.dataset.id = data[0]["ListenID"];
+                edit_current_list.textContent = "🔨";
+                edit_current_list.addEventListener("click", edit_but);
+                list_elem.appendChild(edit_current_list);
+
+
+
                 const delete_list = document.createElement("div");
-                delete_list.textContent="🗑️";
+                delete_list.textContent = "🗑️";
                 delete_list.dataset.id = data[0]["ListenID"];
                 delete_list.classList.add("delete_list");
-                delete_list.addEventListener("click",deletelist);
+                delete_list.addEventListener("click", deletelist);
                 list_elem.appendChild(delete_list);
+
+
                 const informations_box = document.createElement("div");
                 informations_box.classList.add("information_box");
                 list_elem.appendChild(informations_box);
@@ -749,27 +778,239 @@
 
         });
 
-        function deletelist(e){
-           e.stopPropagation();
-           const button = e.currentTarget; 
-           fetch("/delete_list",{
-            method:"POST",
-            headers: {
-                            "Content-Type": "application/json"
-                        },
-            body: JSON.stringify({listenid : button.dataset.id})
-        }).then(response =>{
+        function deletelist(e) {
+            e.stopPropagation();
+            const button = e.currentTarget;
+            fetch("/delete_list", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ listenid: button.dataset.id })
+            }).then(response => {
                 return response.json();
-        }).then(data =>{
-             if (data.error == null){
-                button.parentElement.remove();
-                repositionLists();
-             }   
-        }).catch(error =>{
+            }).then(data => {
+                if (data.error == null) {
+                    button.parentElement.remove();
+                    repositionLists();
+                }
+            }).catch(error => {
 
-        })
-           
+            })
+
         }
+
+        function edit_but(e) {
+            e.stopPropagation();
+            parent = e.currentTarget.parentElement
+            id_list = parent.dataset.id
+            fetch("/take_list", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id: id_list })
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                data_todos = data["todos"];
+                current_list_name = data["listenname"]
+                
+                todo = []
+                for (let i = 0; i < data_todos.length; i++) {
+                    const entry = { id: data_todos[i]["ID"], name: data_todos[i]["Name"], prio: data_todos[i]["Prioritaet"] };
+                    todo.push(entry)
+                }
+               
+                background_div = document.createElement("div");
+                background_div.classList.add("background_add");
+                document.body.appendChild(background_div);
+                select_box = document.createElement("div");
+                select_box.classList.add("select_box");
+                background_div.appendChild(select_box);
+                close_b = document.createElement("div");
+                close_b.classList.add("close_b");
+                close_b.textContent = "✕";
+                select_box.appendChild(close_b);
+                close_b.addEventListener("click", close_all);
+                select_set = document.createElement("div");
+                select_set.classList.add("select_set");
+                select_box.appendChild(select_set);
+                const forward = document.createElement("div");
+                forward.classList.add("forward");
+                forward.textContent = "✓";
+                forward.addEventListener("click", () => {
+                    edit_listname(todo, id_list,current_list_name)
+                });
+                select_box.appendChild(forward);
+                for (let i = 0; i < todo.length; i++) {
+                    const edit_elem = document.createElement("div");
+                    edit_elem.classList.add("edit_elem");
+                   
+                    edit_elem.dataset.id = todo[i]["id"];
+                    edit_elem.dataset.index = i;
+
+                    const name = document.createElement("div");
+                    name.classList.add("edit_prio");
+                    name.textContent = "Aufgabe: " + todo[i]["name"]
+
+                    const prio = document.createElement("div");
+                    prio.classList.add("edit_prio");
+                    prio.textContent = "Priorität: " + todo[i]["prio"]
+
+                    const delete_edit_elem = document.createElement("div");
+                    delete_edit_elem.classList.add("delete_edit_elem")
+                    delete_edit_elem.textContent = "❌";
+                    delete_edit_elem.dataset.id = todo[i]["id"];
+
+                    const edit_edit_elem = document.createElement("div");
+                    edit_edit_elem.classList.add("edit_edit_elem");
+                    edit_edit_elem.textContent = "🔨";
+                    edit_edit_elem.dataset.id = todo[i]["id"];
+                    edit_edit_elem.dataset.index = i;
+
+                    edit_elem.appendChild(prio)
+                    edit_elem.appendChild(name)
+                    edit_elem.appendChild(delete_edit_elem)
+                    edit_elem.appendChild(edit_edit_elem)
+                    select_set.appendChild(edit_elem)
+                    delete_edit_elem.addEventListener("click", (e) => {
+                        parent = e.target.parentElement;
+                        id = e.target.dataset.id;
+                        parent.remove();
+                        for (let i = 0; i < todo.length; i++) {
+                            if (todo[i]["id"] == id) {
+                                todo.splice(i, 1);
+                                console.log(todo)
+                                break;
+                            }
+                        }
+
+                    });
+                    edit_edit_elem.addEventListener("click", (e) => {
+
+                        create_field = document.createElement("div");
+                        create_field.classList.add("create_field");
+                        select_box.appendChild(create_field);
+
+                        creator = document.createElement("div");
+                        creator.classList.add("creator");
+                        create_field.appendChild(creator);
+
+                        const close_creator = document.createElement("div");
+                        close_creator.classList.add("close_cr");
+                        close_creator.textContent = "✕";
+                        creator.appendChild(close_creator);
+                        close_creator.addEventListener("click", cl_creator);
+
+                        const name = document.createElement("input");
+                        name.placeholder = "Was möchten Sie erledigen?";
+                        name.classList.add("titel");
+                        name.value = todo[e.target.dataset.index]["name"];
+                        creator.appendChild(name);
+
+                        const tick = document.createElement("div");
+                        tick.textContent = "✓";
+                        tick.classList.add("tick");
+                        creator.appendChild(tick);
+
+                        const select = document.createElement("select");
+                        select.classList.add("priority_select");
+
+                        const option1 = new Option("Niedrig", "niedrig");
+                        const option2 = new Option("Mittel", "mittel");
+                        const option3 = new Option("Hoch", "hoch");
+
+                        select.append(option1, option2, option3);
+                        select.value = todo[e.target.dataset.index]["prio"];
+
+                        creator.appendChild(select);
+
+
+                        tick.addEventListener("click", function () {
+                            create_field.remove()
+                            obj = select_box.querySelector(`[data-id="${e.target.dataset.id}"]`)
+                            obj.children[0].textContent = "Priorität: " + select.value;
+                            obj.children[1].textContent = "Aufgabe: " + name.value;
+                            for (let i = 0; i < todo.length; i++) {
+                                if (todo[i]["id"] == obj.dataset.id) {
+                                    todo[i]["prio"] = select.value;
+                                    todo[i]["name"] = name.value;
+                                    console.log(todo)
+                                    break;
+                                }
+                            }
+
+
+                        });
+
+                    });
+
+                }
+
+            })
+
+        }
+
+        function edit_listname(new_todo_list, id_list,current_list_name) {
+            create_field = document.createElement("div");
+            create_field.classList.add("create_field");
+            select_box.appendChild(create_field);
+            creator = document.createElement("div");
+            creator.classList.remove("creator");
+            creator.classList.add("creator_listname");
+            create_field.appendChild(creator);
+            const close_creator = document.createElement("div");
+            close_creator.classList.add("close_cr");
+            close_creator.textContent = "✕";
+            creator.appendChild(close_creator);
+            close_creator.addEventListener("click", cl_creator);
+            const name = document.createElement("input");
+            name.placeholder = "Titel der Liste";
+            name.value = current_list_name; 
+            name.classList.add("list_name");
+            creator.appendChild(name);
+            const test_tick = document.createElement("div")
+            test_tick.textContent = "✓";
+            test_tick.classList.add("tick");
+            creator.appendChild(test_tick);
+            test_tick.addEventListener("click", function () {
+                if (name.value != "") {
+                    background_div.remove();
+                    save_modified_list(new_todo_list, id_list,name.value);
+                } else {
+                    empty = document.createElement("div");
+                    empty.classList.add("empty")
+                    creator.appendChild(empty);
+                    empty.textContent = "Bitte geben Sie einen Titel ein";
+                }
+            });
+        }
+
+        function save_modified_list(new_todo_list, id_list,current_list_name) {
+            console.log(current_list_name)
+            payload = {
+                listname : current_list_name,
+                id_list: id_list,
+                new_todo_list: new_todo_list
+
+            }
+            fetch("/save_modified_list", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                element = document.body.querySelector(`.list_elem[data-id="${id_list}"]`);
+                list_information = element.children[0]
+                list_name = list_information.children[1]
+                list_name.textContent = data["listname"] 
+            })
+        }
+
 
 
 

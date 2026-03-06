@@ -712,3 +712,81 @@ html {
    background-color: rgba(120, 119, 119, 0.35)
    
 }
+
+.edit_list{
+    font-size: 150%;
+    position:absolute; 
+    top: 1%;
+    right: 15%;
+    top: 4%;
+    border-radius: 999px;
+    height: 3vh;
+    width: 3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.edit_list:hover{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   background-color: rgba(120, 119, 119, 0.35)
+}
+
+.edit_elem{
+   width: 80%;
+    height: 5vh;
+    border: 1px solid black;
+    gap: 2%;
+    display: flex;
+    align-items: center;
+    margin-top: 2%;
+    margin-left: 10%;
+    font-size: 180%;
+}
+
+
+
+.edit_prio{
+    
+    width: 33%;
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete_edit_elem{
+    margin-left: auto;
+    height: 3vh;
+    width: 3vh;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.edit_edit_elem{
+    margin-right: 10px;
+    height: 3vh;
+    width: 3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete_edit_elem:hover{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   background-color: rgba(120, 119, 119, 0.35);
+   cursor: pointer;
+   border-radius: 999px;
+}
+
+.edit_edit_elem:hover{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   background-color: rgba(120, 119, 119, 0.35);
+   cursor: pointer;
+   border-radius: 999px;
+}
+
+
+
